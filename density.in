@@ -1,0 +1,28 @@
+log none
+units metal 
+dimension 3 
+boundary p p p 
+atom_style atomic 
+atom_modify map array
+
+variable den_out equal 8.786 #target density
+
+read_data /home/jsp/SnPbTe_alloys/make_surface_20240919/ele4ratio/Sn24Te24_111.data
+
+pair_style none
+
+variable den_in equal density #current density
+variable den_ratio equal ${den_in}/${den_out}
+variable den_scale equal ${den_ratio}^(1.0/3.0)
+print ""
+print ""
+print "**original density:"
+print $(density)
+print "**box scaling factor:"
+print ${den_scale}
+
+change_box all x scale ${den_scale} y scale ${den_scale} z scale ${den_scale} remap units box
+write_data /home/jsp/SnPbTe_alloys/make_surface_20240919/den_mod/temp.data 
+print "**Density after scaling the box size:"
+print $(density)
+

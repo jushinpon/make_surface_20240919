@@ -1,0 +1,1 @@
+B2.lmp is a template data file for perl script. For your owb system, you need to modify the atom type number and masses.

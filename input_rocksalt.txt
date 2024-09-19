@@ -1,0 +1,20 @@
+#You have to follow the following format!space after ":"
+
+template_file:
+rocksalt.data
+
+#element sequence in DLP
+dlp_element:
+Sn Pb Te
+
+#subgroup information,element group, numbers
+subgrpNum:
+2
+
+subgrp2:
+Sn Pb
+14 18
+
+subgrp1:
+Te
+32

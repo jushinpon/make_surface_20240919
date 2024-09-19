@@ -1,0 +1,20 @@
+#You have to follow the following format!space after ":"
+
+template_file:
+L12.lmp
+
+#element sequence in DLP
+dlp_element:
+Sn Pb Te
+
+#subgroup information,element group, numbers
+subgrpNum:
+2
+
+subgrp1:
+Sn Pb
+10 14
+
+subgrp2:
+Te 
+8
