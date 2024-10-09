@@ -86,7 +86,7 @@ for my $qe (@QEin_MC){
     }
     my $trimmed = join("\n",@QE_template);
     chomp $trimmed;
-    open(FH, ">QE_trimmed4md/$QEin_name" ) or die $!;
+    open(FH, ">QE_trimmed/$QEin_name" ) or die $!;
     print FH $trimmed;
     close(FH);
    # #$QEin_name =~ s/\.in//g;
