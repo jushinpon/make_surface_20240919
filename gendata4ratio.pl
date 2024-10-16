@@ -139,21 +139,33 @@ while ($end_index == 0){
         for my $i (@all_com){
             $input_para{elem_info} = $i;
             &make_input(\%input_para);
-            system("perl makedata4QE.pl");
+            system("perl makedata4QE.pl");#genrate all data files with DLP element types (may have unused ones)
+            `cp ./output.data ./output.data-ori`;
+            system("perl Mod_data_eleType.pl ./output.data");#remove unused elements in masses and re_assign elm id
             
             ####assign filename 
             my $atomn = `grep atoms ./output.data|awk '{print \$1}'`;
             chomp $atomn;
             my $typen = `grep types ./output.data|awk '{print \$1}'`;
             $typen =~ s/^\s+|\s+$//g;
+            print "\$typen: $typen\n";
+            #element symbol 
+            my @ele = `grep -v '^[[:space:]]*\$' ./output.data|grep -A $typen Masses|grep -v Masses|grep -v -- '--'|awk '{print \$NF}'`;
+            map { s/^\s+|\s+$//g; } @ele;
+            die "No Masses for finding element symbol in $i\n" unless(@ele);
 
+            #get all element id of atoms
             my @typeinfo = `grep -v '^[[:space:]]*\$' ./output.data|grep -A $atomn Atoms|grep -v Atoms|grep -v -- '--'|awk '{print \$2}'`;
             map { s/^\s+|\s+$//g; } @typeinfo;
-            my @elem = @{$setting{dlp_element}};
+            #my @elem = @{$setting{dlp_element}};#all DLP elements
             my %eleNu;
-            @eleNu{@elem} = map {0} @eleNu{@elem};
+            @eleNu{@ele} = map {0} @eleNu{@ele};
+
+            #for my $i (keys %eleNu){
+            #    print "$i --> $eleNu{$i}\n";
+            #}
             my %type2elem;
-            @type2elem{1..@elem} = @elem;
+            @type2elem{1..@ele} = @ele;
             my $c = 0;
             for my $i (@typeinfo){
                 my $ele = $type2elem{$i};
@@ -161,14 +173,15 @@ while ($end_index == 0){
             }
             #make prefix of data file
             my $prefix = "";
-            for my $e (@elem){
-                if($eleNu{$e} != 0){
+            for my $e (@ele){
+                #if($eleNu{$e} != 0){
                     $prefix = "$prefix" . "$e" . "$eleNu{$e}";
-                }
+                #}
             }
             print "prefix: $prefix\n";
             my $out_file = "$currentPath/ele4ratio/$prefix"."_$plane.data";           
-            `mv output.data  $out_file`;
+            #`cp output.data-ori  $out_file-ori`;
+            `mv ./output.data-ori  $out_file`;
         }       
         $end_index = 1;#end of this while loop
     }
